@@ -1,0 +1,228 @@
+body{
+  margin: 0;
+  font-family: 'inter', system-ui;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #E7F6FF;
+}
+*{
+  font-family: 'inter', system-ui;
+}
+
+.wrapper{
+  max-width: 1080px;
+  margin: 50px auto;
+  background: #FFFFFF;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+}
+
+header{
+  border-bottom: 1px solid #eaeaea;
+  h3,p{
+    margin: 0;
+  }
+}
+
+.content{
+  h1{
+    margin: 0;
+  }
+}
+
+.card{
+  position: relative;
+  border: 1px solid #e5e5e5;
+  padding: 30px;
+  min-width: 230px;
+  max-width: 230px;
+  border-radius: 30px;
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  margin: 0 20px 15px 0;
+
+  &:hover{
+    transform: translateY(-8px);
+    box-shadow: 0px 20px 27px rgba(0, 0, 0, 0.10);
+  }
+  h5{
+    font-weight: 400;
+    font-size: 14px;
+  }
+  .favorite{
+    position: absolute;
+    cursor: pointer;
+  }
+
+  span{
+    text-transform: uppercase;
+    opacity: 0.5;
+    font-size: 12px;
+  }
+}
+
+.rubles-card{
+  position: relative;
+  top: -18%;
+  transform: translateY(-50%);
+  font-weight: 600;
+  font-size: 14px;
+  color: #5C5C5C;
+}
+
+.button{
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background: #FFFFFF;
+  border: 1px solid #F2F2F2;
+  border-radius: 8px;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  svg{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+}
+
+.CardCollection{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.search-block{
+  border: 1px solid #F2F2F2;
+  border-radius: 10px;
+  padding: 0 15px;
+  input{
+    font-size: 16px;
+    border: 0;
+    padding: 13px;
+    width: 200px;
+  }
+}
+
+
+.drawer{
+  position: absolute;
+  flex-direction: column;
+  display: flex;
+  width: 420px;
+  right: 0;
+  height: 100%;
+  padding: 30px;
+  background: #FFFFFF;
+  box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
+
+  h2{
+    margin: 0 0 20px 0;
+    font-size: 24px;
+
+    img{
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+      &:hover{
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .items{
+    flex: 1;
+    overflow: auto;
+    margin-bottom: 30px;
+  }
+  .CardTotalBlock{
+    .TotalCartSum{
+      display: flex;
+      align-items: flex-end;
+      div{
+        position: relative;
+        top: -4px;
+        flex: 1;
+        height: 1px;
+        border: 1px dashed #DFDFDF;
+        margin: 0 6px;
+      }
+    }
+  }
+}
+
+.GreenButton{
+    position: relative;
+    width: 100%;
+    height: 55px;
+    background-color: #85b73f;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover{
+      background-color: lighten(#85b73f, 5%);
+    }
+
+    &:active{
+      background-color: darken(#85b73f, 5%);
+    }
+}
+
+.ArrowRight{
+  img{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10%;
+    transition: all 0.3s ease-in-out;
+  }
+
+  &:hover{
+    img{
+      right: 8%;
+    }
+  }
+}
+
+.overlay{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1;
+}
+.cartItem{
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: 1px solid #F2F2F2;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 0px 10px 20px 10px;
+  margin-bottom: 16px;
+
+  p{
+    font-size: 16px;
+    width: 170px;
+  }
+  b{
+    font-size: 14px;
+  }
+  .removeBtn{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 4%;
+    cursor: pointer;
+  }
+}
+
