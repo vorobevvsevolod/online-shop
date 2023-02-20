@@ -2,7 +2,7 @@ const {
     Registration,
     Login,
     GetInfoUser
-} = require('../controllers/users-controllers');
+} = require('../Controllers/users-controllers');
 
 const express = require('express');
 const { validationResult } = require('express-validator')
@@ -16,12 +16,12 @@ router.post('/registration', registrationValidator, (req, res, next)=>{
 });
 router.post('/registration', Registration);
 
-router.get('/auth', LoginValidator, (req,res, next)=>{
+router.post('/auth', LoginValidator, (req,res, next)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json( errors.array());
     next();
 });
-router.get('/auth', Login);
+router.post('/auth', Login);
 
 router.get('/auth/me', (req, res, next)=>{
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');

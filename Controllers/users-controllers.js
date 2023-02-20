@@ -1,13 +1,7 @@
-const {
-    LoginDB,
-    RegistrationDB,
-    GetInfoUserDB
-} = require("../DataBase/usersDB");
-
+const { LoginDB, RegistrationDB,  GetInfoUserDB } = require("../DataBase/usersDB");
 const hashPassword = require('../Utilities/hashPassword')
 const jwt = require('jsonwebtoken');
-const SECRET_PASSWORD = "vsevolod1234";
-
+const SECRET_PASSWORD = require('../server')
 const Registration = (req, res) =>{
     try{
         const password = req.body.password;
@@ -26,22 +20,23 @@ const Registration = (req, res) =>{
 }
 const Login = (req, res) =>{
     try{
-        const token = jwt.sign({
-            email: req.body.email,
-            username: req.body.username
-        }, SECRET_PASSWORD)
         const password = req.body.password;
         const passwordHash = hashPassword(password)
         LoginDB(req.body.email, passwordHash).then(result => {
-            res.json({
-                token: token,
-                result: result,
-            })
+            if(result){
+                const token = jwt.sign({
+                    email: req.body.email,
+                    id: result
+                }, SECRET_PASSWORD)
+                res.json({
+                    token: token,
+                })
+            }else return res.status(404).json('Пользователь не найден')
+
         });
     }catch (e){
         res.status(500).json('ошибка')
     }
-
 }
 const GetInfoUser = (req, res) =>{
     try{
