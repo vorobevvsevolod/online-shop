@@ -1,0 +1,84 @@
+
+.itemConteiner{
+  width: 25%;
+  min-width: 250px;
+  height: 270px;
+  padding: 10px 20px;
+
+.item{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  border: 2px solid #dcdcdc;
+  padding: 28px;
+  .image{
+    width: 150px;
+    height: 90px;
+    border-radius: 10px;
+    background: linear-gradient(315deg, #c2c2c2, #e3e3e3, #c2c2c2);
+    background-size: 300% 300%;
+    animation: gradientAnimation 3s ease-in-out infinite;
+  }
+
+  .price{
+    display: block;
+    span{
+      display: block;
+      width: 150px;
+      height: 15px;
+      background: linear-gradient(315deg, #c2c2c2, #e3e3e3, #c2c2c2);
+      background-size: 300% 300%;
+      animation: gradientAnimation 3s ease-in-out infinite;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+
+    p{
+      margin-top: 10px;
+      width: 90px;
+      height: 15px;
+      border-radius: 5px;
+      background: linear-gradient(315deg, #c2c2c2, #e3e3e3, #c2c2c2);
+      background-size: 300% 300%;
+      animation: gradientAnimation 3s ease-in-out infinite;
+    }
+  }
+  .buy{
+    display: flex;
+
+    span{
+      display: block;
+      width: 80px;
+      height: 24px;
+      background: linear-gradient(315deg, #c2c2c2, #e3e3e3, #c2c2c2);
+      background-size: 300% 300%;
+      animation: gradientAnimation 3s ease-in-out infinite;
+      margin-top: 5px;
+      border-radius: 5px;
+    }
+
+    p{
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      background: linear-gradient(315deg, #c2c2c2, #e3e3e3, #c2c2c2);
+      background-size: 300% 300%;
+      animation: gradientAnimation 3s ease-in-out infinite;
+      margin: 0 0 0 38px;
+    }
+  }
+}
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}

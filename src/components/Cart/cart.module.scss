@@ -1,0 +1,66 @@
+.overlay{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1;
+}
+
+.drawer{
+  position: absolute;
+  flex-direction: column;
+  display: flex;
+  width: 420px;
+  right: 0;
+  height: 100%;
+  padding: 30px;
+  background: #FFFFFF;
+  box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
+
+  h2{
+    margin: 0 0 20px 0;
+    font-size: 24px;
+
+    img{
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+      &:hover{
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .items{
+    flex: 1;
+    overflow: auto;
+    margin-bottom: 30px;
+  }
+  .CardTotalBlock{
+    .TotalCartSum{
+      display: flex;
+      align-items: flex-end;
+      div{
+        position: relative;
+        top: -4px;
+        flex: 1;
+        height: 1px;
+        border: 1px dashed #DFDFDF;
+        margin: 0 6px;
+      }
+    }
+  }
+
+  .cartEmpty{
+    width: 275px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+      text-align: center;
+    img{
+      align-self: center;
+    }
+  }
+}

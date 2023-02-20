@@ -1,0 +1,71 @@
+.cartItem{
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: 1px solid #F2F2F2;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 0px 10px 20px 10px;
+  margin-bottom: 16px;
+
+
+  p{
+    font-size: 16px;
+    width: 170px;
+}
+  b{
+    font-size: 14px;
+}
+
+  .removeBtn{
+    position: absolute;
+    top: 50%;
+    right: 4%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 2px solid #dedede;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:after, &:before{
+      display: block;
+      position: absolute;
+      content: '';
+      border-radius: 2px;
+      background-color: #b1b1b1;
+      transition: all 0.4s ease-in-out;
+    }
+    &:after,{
+      transform: translate(-50%,-50%) rotate(45deg);
+      top: 50%;
+      left: 50%;
+      width: 11px;
+      height: 2px;
+    }
+    &:before{
+      top: 50%;
+      left: 50%;
+      width: 11px;
+      height: 2px;
+      transform: translate(-50%,-50%) rotate(135deg);
+    }
+
+    &:hover{
+      background: #feb6b6;
+      border: none;
+
+      &:after, &:before{
+        background-color: #ff5959;
+      }
+      &:after{
+        transform: translate(-50%,-50%) rotate(135deg);
+      }
+      &:before{
+        transform: translate(-50%,-50%) rotate(225deg);
+      }
+    }
+  }
+}

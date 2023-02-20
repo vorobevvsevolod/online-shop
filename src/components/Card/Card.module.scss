@@ -1,0 +1,216 @@
+.card{
+  position: relative;
+  border: 1px solid #e5e5e5;
+  padding: 30px;
+  min-width: 230px;
+  max-width: 230px;
+  border-radius: 30px;
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  margin: 0 20px 15px 0;
+
+  &:hover{
+    transform: translateY(-8px);
+    box-shadow: 0px 20px 27px rgba(0, 0, 0, 0.10);
+  }
+  h5{
+    font-weight: 400;
+    font-size: 14px;
+  }
+  .favorite{
+    position: absolute;
+    cursor: pointer;
+  }
+
+  span{
+    text-transform: uppercase;
+    opacity: 0.5;
+    font-size: 12px;
+  }
+
+
+  .buttonCard{
+    position: relative;
+    width: 32px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 2px solid #dedede;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:after, &:before{
+      display: block;
+      position: absolute;
+      content: '';
+      border-radius: 2px;
+      background-color: #b1b1b1;
+      transition: all 0.4s ease-in-out;
+    }
+    &:after,{
+      transform: translate(-50%,-50%);
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 2px;
+    }
+    &:before{
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 2px;
+      transform: translate(-50%,-50%) rotate(90deg);
+    }
+
+    &:hover{
+      background: linear-gradient(180deg, #89F09C 0%, #3CC755 100%);
+      border: none;
+
+      &:after, &:before{
+        background-color: #FFFFFF;
+
+      }
+         &:after{
+           top: 50%;
+           left: 42%;
+           transform: translate(-50%,-50%) rotate(50deg);
+           width: 8px;
+           height: 2px;
+           box-shadow: 1px 1px 1px #727272;
+         }
+         &:before{
+           top: 48%;
+           left: 57%;
+           transform: translate(-50%, -50%) rotate(130deg);
+           box-shadow: 1px -1px 1px #727272;
+         }
+    }
+  }
+}
+
+.buttonCardAdded{
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(180deg, #89F09C 0%, #3CC755 100%);
+  border: none;
+
+  &:after, &:before{
+    display: block;
+    position: absolute;
+    content: '';
+    border-radius: 2px;
+    background-color: #FFFFFF;
+    transition: all 0.4s ease-in-out;
+  }
+  &:after,{
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 2px;
+  }
+  &:before{
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 2px;
+    transform: translate(-50%,-50%) rotate(90deg);
+  }
+
+  &:after{
+    top: 50%;
+    left: 42%;
+    transform: translate(-50%,-50%) rotate(50deg);
+    width: 8px;
+    height: 2px;
+    // box-shadow: 1px 1px 1px #727272;
+  }
+  &:before{
+    top: 48%;
+    left: 57%;
+    transform: translate(-50%, -50%) rotate(130deg);
+    //box-shadow: 1px -1px 1px #727272;
+  }
+
+  &:hover{
+    &:after{
+      opacity: 0;
+    }
+    &:before{
+      width: 11px;
+      height: 2px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+  }
+}
+
+.buttonFavorites, .buttonUnFavorites{
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background: #FFFFFF;
+  border: 2px solid #dedede;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  svg{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.3s ease-in-out;
+  }
+
+  &:hover{
+    border: none;
+    background-color: #ffc8c8;
+
+    svg{
+      fill: #FF8585;
+      width: 17px;
+      height: 17px;
+    }
+  }
+
+  &:active{
+    svg{
+      path{
+        fill: #FF8585;
+      }
+    }
+  }
+}
+
+
+.buttonFavorites{
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: #ffc8c8;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  svg{
+    fill: #FF8585;
+    width: 17px;
+    height: 17px;
+  }
+
+  &:hover{
+    border: none;
+    background-color: #ffc8c8;
+
+    svg{
+      fill: #b1b1b1;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
