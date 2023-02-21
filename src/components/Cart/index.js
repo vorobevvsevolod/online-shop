@@ -1,9 +1,9 @@
 import React, {useContext} from "react";
 import { CartContext, TokenUserContext} from "../../App";
 import Item from "./Item/";
-import GreenButton from "../button/GreenButton";
+import GreenButton from "../button/OrangeButton";
 import styles from './cart.module.scss'
-import {deleteItemByCartAxios} from "../axios";
+import {deleteItemByCartAxios} from "../Axios";
 
 export default function Cart(){
     const {cartState, setCartState} = useContext(CartContext)
@@ -17,24 +17,36 @@ export default function Cart(){
         setTotalPrice(count)
     },[cartState.cartArray])
     const DeleteItem = (id) =>{
-        deleteItemByCartAxios(tokenUser, id).then(res =>{
-            if(res.response){
-                alert(res.response.data)
-            }else{
-                let mass = [...cartState.cartArray];
-                for (let i in mass) {
-                    if (mass[i].id === id) {
-                        mass.splice(i, 1);
-                        break;
+        if(tokenUser){
+            deleteItemByCartAxios(tokenUser, id).then(res =>{
+                if(res.response){
+                    alert(res.response.data)
+                }else{
+                    let mass = [...cartState.cartArray];
+                    for (let i in mass) {
+                        if (mass[i].id === id) {
+                            mass.splice(i, 1);
+                            break;
+                        }
                     }
+                    setCartState({...cartState, cartArray: mass});
                 }
-                setCartState({...cartState, cartArray: mass});
-            }
-        })
+            })
+        }else cartState.cartArray.find(item => {
+                if(item.id === id){
+                    let mass = [...cartState.cartArray];
+                    for (let i in mass) {
+                        if (mass[i].id === item.id) {
+                            mass.splice(i, 1);
+                            break;
+                        }
+                    }
+                    setCartState({...cartState, cartArray: mass});
+                }
+            })
     }
 
     return(
-        <div className={styles.overlay}>
             <div className={styles.drawer}>
                 <h2 className='d-flex justify-between'>Корзина
                     <img src="/img/close-x.svg" alt="close" onClick={() =>setCartState({...cartState, show: !cartState.show })}/>
@@ -70,7 +82,6 @@ export default function Cart(){
                     </div>
                 }
             </div>
-        </div>
     );
 }
 
