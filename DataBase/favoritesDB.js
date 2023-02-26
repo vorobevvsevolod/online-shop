@@ -13,7 +13,7 @@ function addProductInFavoritesDB(userId, productId){
 }
 
 function deleteProductInFavoritesDB(favoritesItemId, userId){
-    return client.query(`DELETE FROM favorites WHERE id = $1 AND user_id = $2`, [favoritesItemId, userId])
+    return client.query(`DELETE FROM favorites WHERE product_id = $1 AND user_id = $2`, [favoritesItemId, userId])
         .then(result => {
             if (result.rowCount === 0) return false
             else return true

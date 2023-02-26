@@ -1,4 +1,4 @@
-const {getCartDB, addProductInCartDB, deleteProductInCartDB} = require("../DataBase/cartDB");
+const {getCartDB, addProductInCartDB, deleteProductInCartDB, updateQuantityCartDB} = require("../DataBase/cartDB");
 
 
 const getCartUsers = (req, res) =>{
@@ -19,7 +19,8 @@ const addProductInCart = (req, res) =>{
 
 const deleteProductInCart = (req, res) =>{
     try{
-        deleteProductInCartDB(req.body.cartItemId, req.idUser)
+        const id = req.params.id;
+        deleteProductInCartDB(id, req.idUser)
             .then(result =>{
                 if(result) res.json(result)
                 else res.status(500).json('Товар не найден');
@@ -27,10 +28,20 @@ const deleteProductInCart = (req, res) =>{
     }catch (e){ res.status(500).json('ошибка');}
 }
 
+const updateQuantityCart = (req, res) =>{
+    try{
+        updateQuantityCartDB(req.params.id, req.idUser, req.body.quantity)
+        .then(result =>{
+            if(result) res.json(result)
+                else res.status(500).json('Товар не найден');
+        })
+    }catch (e){ res.status(500).json('ошибка');}
+}
 
 
 module.exports ={
     getCartUsers:getCartUsers,
     addProductInCart: addProductInCart,
-    deleteProductInCart: deleteProductInCart
+    deleteProductInCart: deleteProductInCart,
+    updateQuantityCart:updateQuantityCart 
 }

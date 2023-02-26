@@ -12,6 +12,7 @@ app.use(require('./Routes/users-routers'));
 app.use(require('./Routes/products-routers'));
 app.use(require('./Routes/cart-routers'));
 app.use(require('./Routes/favorites-routers'));
+app.use(require('./Routes/reviews-routers'));
 
 app.listen(PORT, (err)=>{
     if(err) return console.log(err);

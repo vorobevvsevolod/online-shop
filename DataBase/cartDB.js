@@ -13,8 +13,8 @@ function addProductInCartDB(userId, productId, quantity){
         .catch(err => console.error(err));
 }
 
-function deleteProductInCartDB(cartItemId, userId){
-    return client.query(`DELETE FROM cart WHERE id = $1 AND user_id = $2`, [cartItemId, userId])
+function deleteProductInCartDB(ProductID, userId){
+    return client.query(`DELETE FROM cart WHERE product_id = $1 AND user_id = $2`, [ProductID, userId])
         .then(result => {
             if (result.rowCount === 0) return false
              else return true
@@ -22,8 +22,18 @@ function deleteProductInCartDB(cartItemId, userId){
         .catch(err => console.error(err));
 }
 
+function updateQuantityCartDB (productId, userId, quantity){
+    return client.query(`UPDATE cart SET quantity = $1 WHERE product_id = $2 AND user_id = $3`, [quantity, productId, userId])
+    .then(result => {
+        if (result.rowCount === 0) return false
+         else return true
+    })
+    .catch(err => console.error(err));
+}
+
 module.exports = {
     getCartDB: getCartDB,
     addProductInCartDB: addProductInCartDB,
-    deleteProductInCartDB: deleteProductInCartDB
+    deleteProductInCartDB: deleteProductInCartDB,
+    updateQuantityCartDB:updateQuantityCartDB
 }

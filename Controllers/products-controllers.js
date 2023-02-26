@@ -16,7 +16,6 @@ const getProducts = (req, res) =>{
 const getProductsByID = (req, res) =>{
     try{
         const id = req.params.id;
-        console.log(id)
         getProductsByIdDB(id).then(result => {
             res.json({
                 result: result
