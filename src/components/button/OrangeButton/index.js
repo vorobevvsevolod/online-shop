@@ -1,6 +1,6 @@
 import React from "react";
 import styles from './OrangeButton.module.scss'
-export default function GreenButton(props){
+export default function OrangeButton(props){
     return(
         <button className={`${styles.GreenButton} ${props.direction === 'right' ? styles.ArrowRight : styles.ArrowLeft}`} onClick={props.onClick}>
             {props.txt}

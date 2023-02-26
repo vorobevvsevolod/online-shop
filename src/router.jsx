@@ -1,18 +1,24 @@
 import { Route, Routes} from "react-router-dom";
-import HomePage from "./components/pages/homePage";
+import HomePage from "./pages/homePage";
 import React from "react";
-import CabinetPage from "./components/pages/cabinetPage";
-import DostavkaPage from "./components/pages/DostavkaPage";
-import ContactsPage from "./components/pages/ContactsPage";
+import CabinetPage from "./pages/cabinetPage";
+import DostavkaPage from "./pages/DostavkaPage";
+import ContactsPage from "./pages/ContactsPage";
+import LoginRegisterPage from "./pages/LoginRegisterPage";
+import FullProductPage from "./pages/FullProductPage";
+import ErrorPage from "./pages/ErrorPage";
 
 
 const Router = () => {
     return (
             <Routes>
-                <Route path="/" element={ <HomePage />} />
-                <Route path="/cabinet" element={ <CabinetPage />} />
-                <Route path="/dostavka" element={ <DostavkaPage /> } />
-                <Route path="/contacts" element={ <ContactsPage/> } />
+                <Route exact path="/" element={ <HomePage />} />
+                <Route exact path="/cabinet" element={ <CabinetPage />} />
+                <Route exact path="/dostavka" element={ <DostavkaPage /> } />
+                <Route exact path="/contacts" element={ <ContactsPage/> } />
+                <Route exact path="/login" element={ <LoginRegisterPage/> }/>
+                <Route exact path="/product/:id" element={<FullProductPage /> }/>
+                <Route path="*" element={<ErrorPage/>} />
             </Routes>
     );
 };

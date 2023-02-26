@@ -1,20 +1,22 @@
-import React, {useContext} from "react";
-import {CartContext, TokenUserContext, LoginRegisterContext} from "../../App";
+import React from "react";
 import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {setShowCart} from "../../redux/Slices/CartArraySlice";
 
 function Header(){
-    const {cartState, setCartState} = useContext(CartContext)
     const [totalPrice, setTotalPrice] = React.useState(0);
-    const {tokenUser} = React.useContext(TokenUserContext)
-    const {loginRegisterShow, setLoginRegisterShow} = React.useContext(LoginRegisterContext)
+    const tokenUser = useSelector(state => state.tokenUser.token)
+    const dispatch = useDispatch();
+    const cart = useSelector(state => state.cartFavorites.cart)
+    const card = useSelector(state => state.card.products)
     React.useEffect(()=>{
-        let count =0;
-        cartState.cartArray.map(item =>(
-            count += Number(item.product.price)
-        ))
-        if(count !== 0)count += 500;
+        let count = 0;
+        cart.map(item =>{
+            const product = card.find(product => product.id === item.product_id)
+            count += (Number(product.price) * item.quantity)
+        })
         setTotalPrice(count)
-    }, [cartState.cartArray])
+    },[cart])
     return(
             <header>
                 <Link to='/'>
@@ -28,7 +30,7 @@ function Header(){
                 </Link>
                 <div className='header_center'><Link to='/dostavka'>Доставка</Link> <Link to='/contacts'>Контакты</Link></div>
                 <div className='header_right'>
-                        <button className=' cartButton' onClick={() =>setCartState({...cartState, show: !cartState.show })}>
+                        <button className=' cartButton' onClick={() => dispatch(setShowCart())}>
                             <div className='cartTextButton'>
                                 <svg className='mr-10' width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7.54548 18.1818C7.99735 18.1818 8.36366 17.8155 8.36366 17.3636C8.36366 16.9118 7.99735 16.5455 7.54548 16.5455C7.09361 16.5455 6.72729 16.9118 6.72729 17.3636C6.72729 17.8155 7.09361 18.1818 7.54548 18.1818Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -48,9 +50,12 @@ function Header(){
                                         <span>Кабинет</span>
                                     </button>
                                 </Link> :
-                                <button className='kabinetLogin' onClick={()=> setLoginRegisterShow(!loginRegisterShow)}>
+                            <Link to='/login'>
+                                <button className='kabinetLogin' >
                                     Войти
                                 </button>
+                            </Link>
+
                         }
                 </div>
 

@@ -1,0 +1,102 @@
+.containerBtn{
+  margin: 10px 0 0 6px;
+  display: flex;
+  span{
+    display: block;
+    border: 1px solid #e0e0e0;
+    height: 30px;
+    width: 30px;
+    margin: 0 10px 0 10px;
+    border-radius: 5px;
+    input{
+      text-align: center;
+      border: none;
+      background: none;
+      width: 28px;
+      height: 28px;
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+}
+
+.removeBtn, .addBtn{
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background: #FFFFFF;
+  border: 2px solid #dedede;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+
+}
+
+
+.addBtn{
+  &:after, &:before{
+    display: block;
+    position: absolute;
+    content: '';
+    border-radius: 2px;
+    background-color: #b1b1b1;
+    transition: all 0.4s ease-in-out;
+  }
+  &:after{
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    width: 11px;
+    height: 2px;
+  }
+  &:before{
+    top: 50%;
+    left: 50%;
+    width: 11px;
+    height: 2px;
+    transform: translate(-50%,-50%) rotate(90deg);
+  }
+
+  &:hover{
+    background-color: #77ff59;
+    border: none;
+
+    &:after, &:before{
+      background: white;
+    }
+    &:after{
+      transform: translate(-50%,-50%) rotate(90deg);
+    }
+    &:before{
+      transform: translate(-50%,-50%) rotate(180deg);
+    }
+  }
+}
+
+.removeBtn{
+
+  &:after{
+    display: block;
+    position: absolute;
+    content: '';
+    border-radius: 2px;
+    background-color: #b1b1b1;
+    transition: all 0.4s ease-in-out;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 2px;
+  }
+
+  &:hover{
+    background: #ff9c9c;
+    border: none;
+    &:after{
+      transform: translate(-50%,-50%) rotate(180deg);
+      background: #fa5c5c;
+    }
+  }
+
+}

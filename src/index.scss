@@ -145,6 +145,14 @@ header{
 }
 
 .content{
+  position: relative;
+
+  .SortContainer{
+    display: flex;
+    margin-bottom: 20px;
+
+
+  }
   h1{
     margin: 0;
     position: relative;
@@ -177,6 +185,8 @@ header{
     display: flex;
     flex-wrap: wrap;
   }
+
+
 }
 
 .overlay{

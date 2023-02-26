@@ -1,119 +1,67 @@
 import Header from './components/Header'
 import Cart from './components/Cart'
 import React from "react";
-import axios from "axios";
-import {getCartAxios} from "./components/Axios";
 import Router from "./router";
-import LoginRegister from "./components/LoginRegister/LoginRegister";
-
-const URLServer = 'http://192.168.31.11:3500';
-export const CartContext = React.createContext(null);
-export const CardArrayContext = React.createContext(null);
-export const TokenUserContext = React.createContext(null);
-export const ServerErrorContext = React.createContext(null)
-export const LoginRegisterContext = React.createContext(null)
+import { useDispatch, useSelector } from 'react-redux';
+import { GetTokenByCookie } from './redux/Slices/TokenUserSlice'
+import {fetchCards, setFavoritesAndCart} from "./redux/Slices/CardArraySlice";
+import {fetchCart} from "./redux/Slices/CartArraySlice";
 
 
 function App() {
-    //Корзина
-    const [cartState, setCartState] = React.useState({show: false, cartArray: []})
-    //Продукты
-    const [cardArray, setCardArray] = React.useState([])
-    const [loginRegisterShow, setLoginRegisterShow] = React.useState(false);
-    //Состояние сервера
-    const [serverError, setServerError] = React.useState(false);
-    const [tokenUser, setTokenUser] = React.useState('');
-
+    const dispatch = useDispatch();
+    const showCart = useSelector(state => state.cartFavorites.showCart);
     React.useEffect(() => {
-        const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, "$1");
-        if(token) setTokenUser(token);
-        const intervalId = setInterval(() => {
-            axios.get(`${URLServer}/products`)
-                .then(response => {
-                    const products = response.data.result;
-                    const promises = products.map(product => {
-                        return axios.get(`${URLServer}/product/image/${product.id}`, { responseType: 'blob' })
-                            .then(response => {
-                                product.image_url = URL.createObjectURL(response.data);
-                                product.addedCart = false;
+        dispatch(GetTokenByCookie())
+        dispatch(fetchCards()).then(resCard => {
+            dispatch(fetchCart()).then(resCart =>{
+                dispatch(setFavoritesAndCart(resCart.payload))
+            })
+        })
+/*
+        let token = GetToken();
 
-                            });
-                    });
-                    Promise.all(promises).then(() => {
-                        setServerError(false);
-                        if(token){
-                            getCartAxios(token).then(res =>{
-                                const cart = res.data;
-                                const newCart = cart.map(item => {
-                                    products.map(pr => {
-                                        if(pr.id === item.product_id)  pr.addedCart = true;
-                                    })
-                                    const product = products.find(p => p.id === item.product_id);
-                                    return {
-                                        id: item.id,
-                                        product: product,
-                                        quantity: item.quantity
-                                    };
+        let intervalID = setInterval(() => {
+            return getCardAxios().then(res => {
+                if(res.message){
+                    dispatch(ServerErrorTrue())
+                } else {
+                    if(token){
+                        GetCartAndFavorites(token, res).then(res =>{
+                            dispatch(ServerErrorFalse())
+                            setCardArray(res.newCard);
+                            setCartState(prev => ({...prev, cartArray: res.newCart}));
+                        })
+                    }else setCardArray(res)
 
-                                });
-                                setCardArray(products);
-                                setCartState({...cartState, cartArray: newCart});
-                            })
-                        }
-                        setCardArray(products);
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                    });
-                })
-                .catch(error => {
-                    console.log(error);
-                    setServerError(true);
-                });
+                    clearInterval(intervalID);
+                    clearTimeout(timeoutID);
+                }
+            })
+        }, 1000)
 
-        }, 1000);
-
-        const timeoutId = setTimeout(() => {
-            clearInterval(intervalId);
-            setServerError(true);
-        }, 60000);
-
-
-        /*
-        */
+        const timeoutID = setTimeout(() => {
+            clearInterval(intervalID);
+            dispatch(ServerErrorTrue())
+        }, 10000);
 
         return () => {
-            clearInterval(intervalId);
-            clearTimeout(timeoutId);
-        };
+            clearInterval(intervalID);
+            clearTimeout(timeoutID);
+        };*/
     }, []);
 
   return (
-      <LoginRegisterContext.Provider value={{loginRegisterShow, setLoginRegisterShow}}>
-          <TokenUserContext.Provider value={{tokenUser, setTokenUser}}>
-              <CartContext.Provider value={{cartState, setCartState}}>
-                  <CardArrayContext.Provider value={{cardArray}}>
-                      <ServerErrorContext.Provider value={{serverError, setServerError}}>
-                          { ((cartState.show || loginRegisterShow)) && <div className="overlay cu-p" onClick={()=>{
-                                if(loginRegisterShow) setLoginRegisterShow(false);
-                                if(cartState.show) setCartState({...cartState, show: false})
-                          }
-                          }></div>}
-                          {(cartState.show) && <Cart/>}
-                          {(loginRegisterShow) && <LoginRegister />}
-                            <div className="wrapper clear">
-                                <Header/>
+      <>
+          {(showCart) && <Cart/>}
+          <div className="wrapper clear">
+              <Header/>
+              <div className='content p-40'>
+                  <Router/>
+              </div>
 
-
-
-
-                                <Router/>
-
-                             </div>
-                      </ServerErrorContext.Provider>
-                  </CardArrayContext.Provider>
-              </CartContext.Provider>
-          </TokenUserContext.Provider>
-      </LoginRegisterContext.Provider>
+          </div>
+      </>
   );
 }
 export default App;
