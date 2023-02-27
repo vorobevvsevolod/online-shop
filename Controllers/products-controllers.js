@@ -1,9 +1,9 @@
-const { getProductsDB, getProductsByIdDB, addProductsDB, getImageDB, updateProductImageURL} = require('../DataBase/productsDB');
+const { getProductsDB, getProductsByIdDB, addProductsDB, getImageDB, updateProductImageURL, getCountProductsDB} = require('../DataBase/productsDB');
 const saveImage = require("../Utilities/saveImage");
 
 const getProducts = (req, res) =>{
     try{
-        getProductsDB().then(result => {
+        getProductsDB(Number(req.query.offset)).then(result => {
             res.json({
                 result: result
             })
@@ -59,11 +59,24 @@ const getImage = (req, res) =>{
     }
 }
 
+const getCountProducts = (req, res) =>{
+    try {
+        
+        getCountProductsDB().then(result =>{
+            res.json({count: result})
+        })
+    } catch (e) {
+        res.status(500).json('ошибка')
+    }
+
+}
+
 module.exports ={
     getProducts: getProducts,
     getProductsByID:getProductsByID,
     addProducts: addProducts,
-    getImage:getImage
+    getImage:getImage,
+    getCountProducts: getCountProducts
 }
 
 

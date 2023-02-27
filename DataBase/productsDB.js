@@ -1,7 +1,9 @@
 const {client} = require('./connectToDB');
 const fs = require('fs');
-function getProductsDB(){
-    return client.query('SELECT * FROM products')
+
+function getProductsDB(offset){
+    const limit = 12;
+    return client.query('SELECT * FROM products ORDER BY id LIMIT $1 OFFSET $2', [limit, offset])
         .then(result => {
             return result.rows;
         })
@@ -29,6 +31,7 @@ function addProductsDB(product){
             console.error(err);
         });
 }
+
 function updateProductImageURL(id, imageURL) {
     return client.query('UPDATE products SET image_url = $1 WHERE id = $2', [imageURL, id])
         .then(result => {
@@ -38,12 +41,11 @@ function updateProductImageURL(id, imageURL) {
         })
         .catch(err => {
             console.error(err);
-            throw err;
         });
 }
 
 function getImageDB(id, res) {
-    client.query('SELECT image_url FROM products WHERE id = $1', [id])
+    return client.query('SELECT image_url FROM products WHERE id = $1', [id])
         .then(result => {
             if (result.rowCount === 0) {
                 res.status(404).send('Изображение не найдено');
@@ -55,7 +57,17 @@ function getImageDB(id, res) {
         })
         .catch(err => {
             console.error(err);
-            res.status(500).send('Ошибка сервера');
+            res.status(500).res.json({err})
+        });
+}
+
+function getCountProductsDB  () {
+    return client.query('SELECT COUNT(*) FROM products')
+        .then(res => { 
+            return res.rows[0].count 
+        })
+        .catch(err => {
+            console.error(err);
         });
 }
 
@@ -64,6 +76,7 @@ module.exports = {
     getProductsByIdDB: getProductsByIdDB,
     addProductsDB: addProductsDB,
     getImageDB: getImageDB,
-    updateProductImageURL:updateProductImageURL
+    updateProductImageURL:updateProductImageURL,
+    getCountProductsDB:getCountProductsDB
 }
 
