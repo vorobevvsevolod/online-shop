@@ -7,15 +7,10 @@ function Header(){
     const [totalPrice, setTotalPrice] = React.useState(0);
     const tokenUser = useSelector(state => state.tokenUser.token)
     const dispatch = useDispatch();
-    const cart = useSelector(state => state.cartFavorites.cart)
-    const card = useSelector(state => state.card.products)
+    const cart = useSelector(state => state.cart.cart)
     React.useEffect(()=>{
-        let count = 0;
-        cart.map(item =>{
-            const product = card.find(product => product.id === item.product_id)
-            count += (Number(product.price) * item.quantity)
-        })
-        setTotalPrice(count)
+
+        setTotalPrice(cart.reduce((sum, obj) => (Number(obj.product.price) * obj.quantity) + sum, 0))
     },[cart])
     return(
             <header>

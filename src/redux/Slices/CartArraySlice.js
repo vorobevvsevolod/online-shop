@@ -4,39 +4,46 @@ import {URLServer} from "../../Axios";
 
 export const fetchCart = createAsyncThunk('cart/fetchCarts', async () => {
     const responseCart = await axios.get(`${URLServer}/cart`)
-    const responseFavorites = await axios.get(`${URLServer}/favorites`)
-    const cart = responseCart.data;
-    const favorites = responseFavorites.data;
-    return {cart: cart, favorites: favorites}
+    const carts = responseCart.data;
+    const promises = carts.map(async (cart) => {
+        const responseProduct = await axios.get(`${URLServer}/product/${cart.product_id}`);
+        const product = responseProduct.data.result[0]
+        const imageResponse = await axios.get(`${URLServer}/product/image/${cart.product_id}`, { responseType: 'arraybuffer' });
+        const blob = new Blob([imageResponse.data], { type: imageResponse.headers['content-type'] });
+        product.image_url = URL.createObjectURL(blob);
+        cart.product = product
+        delete cart.product_id
+        return cart
+    })
+    const updateCarts = await Promise.all(promises)
+    return updateCarts
 });
 
 const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         cart: [],
-        favorites: [],
         showCart: false,
         status: 'idle',
         error: null,
     },
     reducers: {
         setShowCart: state => {state.showCart = !state.showCart},
-        clearCartAndFavorites: state =>{
+        clearCart: state =>{
             state.cart = [];
-            state.favorites = [];
         },
         addItemInCart: (state, action) =>{
             state.cart = [...state.cart, action.payload]
         },
         deleteItemByCart: (state, action) =>{
-            const index = state.cart.findIndex(item => item.product_id === action.payload);
+            const index = state.cart.findIndex(item => item.product.id === action.payload);
             if (index !== -1) {
                 state.cart.splice(index, 1);
             }
         },
         updateQuantityCart: (state, action) =>{
             state.cart.map(item =>{
-                if(item.product_id === action.payload.product_id)
+                if(item.product.id === action.payload.product_id)
                     item.quantity = action.payload.quantity
             })
         }
@@ -48,8 +55,7 @@ const cartSlice = createSlice({
             })
             .addCase(fetchCart.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.cart = action.payload.cart;
-                state.favorites = action.payload.favorites;
+                state.cart = action.payload;
             })
             .addCase(fetchCart.rejected, (state, action) => {
                 state.status = 'failed';
@@ -61,7 +67,7 @@ const cartSlice = createSlice({
 export const cartArrayReducer =  cartSlice.reducer;
 
 export const {
-        clearCartAndFavorites,
+        clearCart,
         setShowCart,
         addItemInCart,
         deleteItemByCart,

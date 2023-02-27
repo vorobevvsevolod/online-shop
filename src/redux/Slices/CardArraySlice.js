@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {getReviewsProductAVGById, getReviewsProductByID, URLServer} from "../../Axios";
+import {URLServer} from "../../Axios";
 
 
-export const fetchCards = createAsyncThunk('card/fetchCards', async () => {
-    const response = await axios.get(`${URLServer}/products`);
-    const products = response.data.result;
+export const fetchCards = createAsyncThunk('card/fetchCards', async (offset) => {
+
+    const responseProducts = await axios.get(`${URLServer}/products?offset=${offset}`);
+    const responseTotalCount = await axios.get(`${URLServer}/products/count`);
+    const products = responseProducts.data.result;
     const promises = products.map(async (product) => {
         const imageResponse = await axios.get(`${URLServer}/product/image/${product.id}`, { responseType: 'arraybuffer' });
         const reviews = await axios.get(`${URLServer}/product/reviews/${product.id}`);
@@ -23,29 +25,30 @@ export const fetchCards = createAsyncThunk('card/fetchCards', async () => {
         return product
     });
     const updatedProducts = await Promise.all(promises);
-    return  updatedProducts.sort((a, b) => Number(b.rating) - Number(a.rating));
+    return  {products: updatedProducts, totalCount: responseTotalCount.data.count};
 });
 
 const cardSlice = createSlice({
     name: 'card',
     initialState: {
         products: [],
+        totalCount: 0,
+        sortMethod: 'rating',
         status: 'idle',
         error: null,
     },
     reducers: {
-        setFavoritedCard: (state, action) => {
-            state.products.map(item =>{
-                if(item.id == action.payload.id) item.favorited = action.payload.flag;
+        setCart: (state, action) =>{
+            state.products.map(product =>{
+                action.payload.map(cart =>{
+                    if(product.id === cart.product.id) product.addedCart = true;
+                })
             })
         },
-        setFavoritesAndCart: (state, action) =>{
+        setFavorites: (state, action) =>{
             state.products.map(product =>{
-                action.payload.cart.map(cart =>{
-                    if(product.id == cart.product_id) product.addedCart = true;
-                })
-                action.payload.favorites.map(favorite =>{
-                    if(product.id == favorite.product_id) product.favorited = true;
+                action.payload.map(cart =>{
+                    if(product.id == cart.product.id) product.favorited = true;
                 })
             })
         },
@@ -58,6 +61,11 @@ const cardSlice = createSlice({
         setAddedCartInCard: (state, action)=>{
             state.products.map(product =>{
                 if(product.id == action.payload.id) product.addedCart = action.payload.flag
+            })
+        },
+        setFavoritedCard: (state, action) => {
+            state.products.map(item =>{
+                if(item.id == action.payload.id) item.favorited = action.payload.flag;
             })
         },
         newCardArray: (state, action) =>{
@@ -76,6 +84,9 @@ const cardSlice = createSlice({
                     product.rating = (rat / product.reviews.length).toFixed(1);
                 }
             })
+        },
+        setSortMethod: (state, action) =>{
+            state.sortMethod = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -85,7 +96,8 @@ const cardSlice = createSlice({
             })
             .addCase(fetchCards.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.products = action.payload;
+                state.products = state.products.concat(action.payload.products) ;
+                state.totalCount = Number(action.payload.totalCount);
             })
             .addCase(fetchCards.rejected, (state, action) => {
                 state.status = 'failed';
@@ -97,10 +109,12 @@ const cardSlice = createSlice({
 export const cardArrayReducer =  cardSlice.reducer;
 
 export const {
+        setCart,
+        setFavorites,
         setFavoritedCard,
-        setFavoritesAndCart,
         clearFavoriteCartInCard,
         setAddedCartInCard,
         newCardArray,
-        updateReviewsRatingProduct
+        updateReviewsRatingProduct,
+        setSortMethod
     } = cardSlice.actions;

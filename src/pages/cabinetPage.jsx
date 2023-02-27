@@ -4,15 +4,17 @@ import {Link} from "react-router-dom";
 import Card from "../components/Card";
 import {useDispatch, useSelector} from "react-redux";
 import {ClearTokenUser} from "../redux/Slices/TokenUserSlice";
-import {clearCartAndFavorites} from "../redux/Slices/CartArraySlice";
+import {clearCart} from "../redux/Slices/CartArraySlice";
 import {clearFavoriteCartInCard} from "../redux/Slices/CardArraySlice";
+import {clearFavorites} from "../redux/Slices/favoritesArraySlice";
 
 function CabinetPage (){
-    const products = useSelector((state) => state.card.products);
+    const favorites = useSelector((state) => state.favorites.favorites);
     const dispatch = useDispatch();
     const exitFromAccount = () => {
         dispatch(ClearTokenUser())
-        dispatch(clearCartAndFavorites())
+        dispatch(clearCart())
+        dispatch(clearFavorites())
         dispatch(clearFavoriteCartInCard())
     }
     return(
@@ -20,7 +22,11 @@ function CabinetPage (){
             <h1 className='mb-25'>Кабинет</h1>
             <h2>Избранные</h2>
             <div className='CardCollection'>
-                {products.filter(item => item.favorited === true).map(card => <Card key={card.id} {...card}/>)}
+                {
+                    favorites.map(favorite =>
+                        <Card key={favorite.id} {...favorite.product} favorited={true}/>
+                    )
+                }
             </div>
             <Link to='/' onClick={exitFromAccount}>
                 <OrangeButton txt='Выйти из аккаунта'/>

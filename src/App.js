@@ -4,20 +4,25 @@ import React from "react";
 import Router from "./router";
 import { useDispatch, useSelector } from 'react-redux';
 import { GetTokenByCookie } from './redux/Slices/TokenUserSlice'
-import {fetchCards, setFavoritesAndCart} from "./redux/Slices/CardArraySlice";
+import {fetchCards, setCart, setFavorites} from "./redux/Slices/CardArraySlice";
 import {fetchCart} from "./redux/Slices/CartArraySlice";
+import {fetchFavorites} from "./redux/Slices/favoritesArraySlice";
+
 
 
 function App() {
     const dispatch = useDispatch();
-    const showCart = useSelector(state => state.cartFavorites.showCart);
     React.useEffect(() => {
         dispatch(GetTokenByCookie())
-        dispatch(fetchCards()).then(resCard => {
-            dispatch(fetchCart()).then(resCart =>{
-                dispatch(setFavoritesAndCart(resCart.payload))
+        dispatch(fetchCards(0)).then(res =>{
+            dispatch(fetchCart()).then(responseCart =>{
+                dispatch(setCart(responseCart.payload))
+            })
+            dispatch(fetchFavorites()).then(responseFavorites =>{
+                dispatch(setFavorites(responseFavorites.payload))
             })
         })
+
 /*
         let token = GetToken();
 
@@ -53,13 +58,12 @@ function App() {
 
   return (
       <>
-          {(showCart) && <Cart/>}
+          <Cart/>
           <div className="wrapper clear">
               <Header/>
               <div className='content p-40'>
                   <Router/>
               </div>
-
           </div>
       </>
   );

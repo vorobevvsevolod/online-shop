@@ -3,9 +3,10 @@ import './loginRegister.scss'
 import {Link, useNavigate} from "react-router-dom";
 import {loginUserAxios} from "../Axios";
 import {SetTokenUser} from "../redux/Slices/TokenUserSlice";
-import {fetchCards, setFavoritesAndCart} from "../redux/Slices/CardArraySlice";
+import {fetchCards, setCart, setFavorites, setFavoritesAndCart} from "../redux/Slices/CardArraySlice";
 import {fetchCart} from "../redux/Slices/CartArraySlice";
 import {useDispatch} from "react-redux";
+import {fetchFavorites} from "../redux/Slices/favoritesArraySlice";
 
 function LoginRegisterPage () {
     const [loginState, setLoginState] = React.useState({email: '', password: ''});
@@ -19,11 +20,14 @@ function LoginRegisterPage () {
             } else if(res.data.token){
                 dispatch(SetTokenUser(res.data.token))
                 localStorage.setItem('token', res.data.token);
-                dispatch(fetchCards()).then(resCard => {
-                    dispatch(fetchCart()).then(resCart =>{
-                        dispatch(setFavoritesAndCart(resCart.payload))
-                    })
+
+                dispatch(fetchCart()).then(responseCart =>{
+                    dispatch(setCart(responseCart.payload))
                 })
+                dispatch(fetchFavorites()).then(responseFavorites =>{
+                    dispatch(setFavorites(responseFavorites.payload))
+                })
+
                 navigate("/");
             } else alert("Что-то не так... Попробуйте еще раз")
         })

@@ -7,11 +7,9 @@ import {setAddedCartInCard} from "../../redux/Slices/CardArraySlice";
 const CounterProduct = (props) => {
     const tokenUser = useSelector(state => state.tokenUser.token)
     const dispatch = useDispatch();
-    const [quantity, setQuantity] = React.useState(props.quantity)
+    const cart = useSelector(state => state.cart.cart)
+    const [quantity, setQuantity] = React.useState((cart.find(item => item.product.id === props.id))?.quantity)
 
-    const plusQuantity = () =>{
-        setQuantity(prev => prev + 1)
-    }
     React.useEffect(() =>{
         if(quantity)
             if(tokenUser){
@@ -22,6 +20,10 @@ const CounterProduct = (props) => {
             }
         dispatch(updateQuantityCart({product_id: props.id, quantity: quantity}))
     }, [quantity])
+
+    React.useEffect(()=>{
+        setQuantity((cart.find(item => item.product.id === props.id))?.quantity)
+    },cart)
 
     const MinusQuantity = () =>{
         if(quantity !== 1)
@@ -43,7 +45,7 @@ const CounterProduct = (props) => {
         <div className={styles.containerBtn}>
             <button className={styles.removeBtn} alt="Remove" onClick={MinusQuantity}/>
             <span><input type="text" value={quantity} onChange={event => setQuantity(event.target.value)}/></span>
-            <button className={styles.addBtn} alt="Remove" onClick={plusQuantity}/>
+            <button className={styles.addBtn} alt="Remove" onClick={() => setQuantity(prev => prev + 1)}/>
         </div>
     );
 };

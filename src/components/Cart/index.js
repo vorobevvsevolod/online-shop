@@ -8,20 +8,15 @@ import {useDispatch, useSelector} from "react-redux";
 export default function Cart(){
     const [totalPrice, setTotalPrice] = React.useState(0);
     const dispatch = useDispatch();
-    const cart = useSelector(state => state.cartFavorites.cart)
-    const card = useSelector(state => state.card.products)
+    const cart = useSelector(state => state.cart.cart)
+    const showCart = useSelector(state => state.cart.showCart);
     React.useEffect(()=>{
-        let count = 0;
-        cart.map(item =>{
-            const product = card.find(product => product.id === item.product_id)
-            count += (Number(product.price) * item.quantity)
-        })
-        setTotalPrice(count)
+        setTotalPrice(cart.reduce((sum, obj) => (Number(obj.product.price) * obj.quantity) + sum, 0))
     },[cart])
 
 
     return(
-        <div className="overlay">
+        <div className={`${styles.overlay} ${ showCart ? styles.overlay_hidden : ''}`}>
             <div className={styles.drawer}>
                 <h2 className='d-flex justify-between'>Корзина
                     <img src="/img/close-x.svg" alt="close" onClick={() =>dispatch(setShowCart())}/>
@@ -29,7 +24,7 @@ export default function Cart(){
                 <div className={styles.items}>
                     {
                         cart.map(item =>(
-                            <Item key={item.product_id} product={card.find(product => product.id === item.product_id)} quantity={item.quantity}/>
+                            <Item key={item.product.id} product={item.product}/>
                         ))
                     }
                 </div>

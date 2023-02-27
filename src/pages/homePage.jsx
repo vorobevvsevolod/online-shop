@@ -3,14 +3,19 @@ import CardLoad from "../components/Card/CardLoad";
 import React from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import SelectSortirovka from "../components/SelectSortirovka";
-import {newCardArray} from "../redux/Slices/CardArraySlice";
+import {fetchCards, newCardArray, setCart, setFavorites, setSortMethod} from "../redux/Slices/CardArraySlice";
+import LoadingAnimation from "../components/LoadingAnimation";
+import OrangeButton from "../components/button/OrangeButton";
 
 function HomePage (){
     const [searchValue,  setSearchValue] = React.useState('');
     const products = useSelector((state) => state.card.products);
     const status = useSelector((state) => state.card.status);
-    const [selectSort, setSelectSort] = React.useState('');
+    const cart = useSelector(state => state.cart.cart)
+    const totalCount = useSelector(state => state.card.totalCount)
 
+    const favorites = useSelector(state => state.favorites.favorites)
+    const sort = useSelector(state => state.card.sortMethod)
 
     const dispatch = useDispatch();
     const option = [
@@ -19,11 +24,10 @@ function HomePage (){
         {value: 'rating', name: 'Сначала с высокой оценкой'},
         {value: 'reviews', name: 'Самые обсуждаемые'},
     ]
-    const selectedSort = (sort) =>{
+    const selectedSort = (sortMethod) =>{
         let sortProducts = [...products];
-        setSelectSort(sort)
-        localStorage.setItem('selectSort', sort);
-        switch (sort){
+        dispatch(setSortMethod(sortMethod))
+        switch (sortMethod){
             case 'priceBy':
                 sortProducts.sort((a, b) => Number(a.price) - Number(b.price));
                 break;
@@ -37,21 +41,25 @@ function HomePage (){
                 sortProducts.sort((a, b) => Number(b.reviews.length) - Number(a.reviews.length));
                 break;
             default: sortProducts = [...products]; break;
-
-
         }
         dispatch(newCardArray(sortProducts))
     }
-    React.useEffect(() =>{
-        setSelectSort(localStorage.getItem('selectSort'))
-    },[])
 
+
+    const renderProductsCard = React.useMemo(() =>{
+            return products.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+                .map(item => (
+                    <Card key={item.id} { ...item}/>
+                ))
+
+        },[products, searchValue, sort]
+    )
     return(
         <>
             <div className='d-flex align-center mb-20 justify-between'>
-                <h1>{(status === 'failed') ?`Ошибка сервера...` : (status === 'loading') ? `Загрузка...` : (searchValue) ? `Поиск...` : "Все кроссовки"}</h1>
+                <h1>{((status === 'failed' && !products.length) || (status === 'failed' && products.length >= 4)) ? `Ошибка сервера...` : (status === 'loading' && !products.length) ? `Загрузка...` : (searchValue) ? `Поиск...` : "Все кроссовки"}</h1>
                 {
-                    (status === 'succeeded')
+                    (products.length)
                         ?
                         <div className="search-block d-flex align-center">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,23 +71,23 @@ function HomePage (){
                         : ''
                 }
             </div>
-            <div className='SortContainer'>
-                <SelectSortirovka option={option}
-                 value={selectSort}
-                 onChange={selectedSort}
-                />
-            </div>
+            { (products.length) ? <div className='SortContainer'>
+                    <SelectSortirovka option={option} value={sort} onChange={selectedSort} />
+                </div> : ''}
 
             <div className='CardCollection'>
-                {
-                    (status === 'succeeded') ?
-                        products.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase()))
-                            .map(item => (
-                                <Card key={item.id} { ...item}/>
-                            ))
-                        : Array.from({length: 16}, (v, i) => <CardLoad key={i}/>)
-                }
+                {((status === 'loading' || status === 'failed') && !products.length) && Array.from({length: 16}, (v, i) => <CardLoad key={i}/>)}
+                {renderProductsCard}
+                {((status === 'loading' || status === 'failed') && products.length >= 4) && <div className='loading_dots'><LoadingAnimation/></div>}
             </div>
+            {((status != 'loading' && status != 'failed') && products.length !== totalCount) && <div className='loading_btn'>
+                <OrangeButton txt='Загрузить еще' onClick={() => {
+                    dispatch(fetchCards(products.length)).then(res =>{
+                        dispatch(setCart(cart))
+                        dispatch(setFavorites(favorites))
+                    })}} />
+            </div>}
+
         </>
     )
 }

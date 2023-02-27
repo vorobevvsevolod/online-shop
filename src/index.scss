@@ -184,23 +184,21 @@ header{
   .CardCollection{
     display: flex;
     flex-wrap: wrap;
+
+    .loading_dots{
+      position: relative;
+      left: 50%;
+      transform: translate(-50%, 50%);
+    }
+
+  }
+  .loading_btn{
+    position: relative;
+    left: 39%;
   }
 
 
 }
-
-.overlay{
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.4);
-  z-index: 1000;
-}
-
-
-
 
 
 

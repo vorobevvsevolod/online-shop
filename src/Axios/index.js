@@ -1,5 +1,5 @@
 import axios from "axios";
-export const URLServer = 'http://localhost:3500';
+export const URLServer = 'http://192.168.31.241:3500';
 const loginUserAxios = (email, password) =>{
     return axios.post(`${URLServer}/auth`, {"email": email, "password": password})
         .then(response => { return response})
