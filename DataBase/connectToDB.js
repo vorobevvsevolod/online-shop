@@ -1,6 +1,6 @@
 const {Client} = require('pg');
 const client = new Client({
-    host:'dpg-cg0fpqt269vcmnfrqvug-a.oregon-postgres.render.com',
+    host:'dpg-cg0fpqt269vcmnfrqvug-a',
     user:'postgres_vsevolod',
     password: 'YfUu9xGuyVM5PBttMKAownF84zGcB7QM',
     database: 'magazin'
