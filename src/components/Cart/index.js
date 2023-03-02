@@ -4,15 +4,22 @@ import OrangeButton from "../button/OrangeButton";
 import styles from './cart.module.scss'
 import { setShowCart} from "../../redux/Slices/CartArraySlice";
 import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 export default function Cart(){
     const [totalPrice, setTotalPrice] = React.useState(0);
     const dispatch = useDispatch();
     const cart = useSelector(state => state.cart.cart)
-    const showCart = useSelector(state => state.cart.showCart);
+    const showCart = useSelector(state => state.cart.showCart);const navigate = useNavigate();
+
     React.useEffect(()=>{
         setTotalPrice(cart.reduce((sum, obj) => (Number(obj.product.price) * obj.quantity) + sum, 0))
     },[cart])
+
+    const redirectOrder = () =>{
+        dispatch(setShowCart())
+        navigate('/order')
+    }
 
 
     return(
@@ -36,12 +43,8 @@ export default function Cart(){
                             <div></div>
                             <b>{totalPrice} руб.</b>
                         </div>
-                        <div className={styles.TotalCartSum}>
-                            <span>Доставка:</span>
-                            <div></div>
-                            <b>500 руб.</b>
-                        </div>
-                        <OrangeButton txt={"Оформить заказ"} direction={'right'}/>
+
+                        <OrangeButton txt={"Оформить заказ"} width='100%' direction={'right'} onClick={redirectOrder}/>
                     </div>
                     :
                     <div className={styles.cartEmpty}>

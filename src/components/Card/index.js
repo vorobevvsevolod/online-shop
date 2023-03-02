@@ -72,7 +72,7 @@ export default function Card (props){
     React.useEffect(() => {
         setAddedInCart(props.addedCart || false);
         setAddedInFavorites(props.favorited || false);
-        setReviews(props.reviews || [])
+        if(!reviews.length) setReviews(props.reviews || [])
     }, [props]);
 
     const ratingStars = (count) => {
@@ -86,9 +86,11 @@ export default function Card (props){
     const submitReviews = () =>{
         if(writeReviews.text !== '' && writeReviews.author !== '' &&  writeReviews.rating !== ''){
             submitReviewsProduct(props.id, writeReviews).then(res =>{
-                if(res.data.response){
+                if(res.data.result){
                     setShowWriteReviews(false)
-                    dispatch(updateReviewsRatingProduct({id: props.id, reviews: writeReviews}))
+                    const newRating = (Number(writeReviews.rating)  + Number(reviews.reduce((sum, obj) => sum + obj.rating, 0))) / (reviews.length + 1);
+                    dispatch(updateReviewsRatingProduct({id: props.id, rating: newRating}))
+                    setReviews(prevState => [...prevState, {...writeReviews ,time: '2022-12-03T00-00-00'}])
                 }
             })
         }else alert("Заполните все поля")
@@ -100,7 +102,7 @@ export default function Card (props){
             <div className={styles.fullProduct}>
                 <h1>{props.name}</h1>
                 <div className={styles.content}>
-                    <img className='cu-p'  src={props.image_url} alt="skeakers" onClick={() => navigate(`/product/${props.id}`)}/>
+                    <img className='cu-p' src={props.image_url} alt="skeakers" onClick={() => navigate(`/product/${props.id}`)}/>
                     <div className={styles.content_favorites}>
                         <button className={(addedInFavorites) ? styles.buttonFavorites : styles.buttonUnFavorites } onClick={() => onClickFavorites(props.id)}>
                             <svg fill="#b1b1b1" width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.37 2.56a3.92 3.92 0 0 0-3-1 4.1 4.1 0 0 0-1.82.52A9.18 9.18 0 0 0 8 3.06a9.35 9.35 0 0 0-1.49-1 3.85 3.85 0 0 0-1.77-.52A4.07 4.07 0 0 0 1.63 2.6 4 4 0 0 0 .35 5.52a3.83 3.83 0 0 0 .88 2.33 33.87 33.87 0 0 0 5.7 6.2l.39-.49-.38.49a1.67 1.67 0 0 0 1.06.42 1.71 1.71 0 0 0 1.08-.42 37.42 37.42 0 0 0 6.06-6.73 3.5 3.5 0 0 0 .47-1.74 4 4 0 0 0-1.24-3.02zm-.26 4.06a37.1 37.1 0 0 1-5.81 6.46.56.56 0 0 1-.28.13.51.51 0 0 1-.29-.14 32.77 32.77 0 0 1-5.49-5.94 2.74 2.74 0 0 1-.64-1.61 2.75 2.75 0 0 1 .88-2 2.79 2.79 0 0 1 2.16-.72h.1a2.73 2.73 0 0 1 1.19.38A10.23 10.23 0 0 1 7.24 4l.76.63.76-.63a9 9 0 0 1 1.34-.86 2.91 2.91 0 0 1 1.26-.39h.1a2.68 2.68 0 0 1 2.07.68 2.78 2.78 0 0 1 .87 2 2.18 2.18 0 0 1-.29 1.19z"/></svg>
@@ -185,7 +187,7 @@ export default function Card (props){
                     </div>
                     <div className={styles.rating}>
                         {
-                            (props.rating)
+                            (props.rating === '0' ? false : true)
                                 ?
                                 <>
                                     <img className={styles.ratingTrue} width={18} height={18} src="/img/star.svg" alt=""/>
@@ -194,12 +196,12 @@ export default function Card (props){
                                 : <img className={styles.ratingFalse} width={18} height={18} src="/img/star.svg" alt=""/>
                         }
                     </div>
-                    <img className='cu-p' width={155} height={160} src={props.image_url} alt="skeakers" onClick={() => navigate(`/product/${props.id}`)}/>
+                    <img className='cu-p' width={155} height={155} src={props.image_url} alt="skeakers" onClick={() => navigate(`/product/${props.id}`)}/>
                     <h5>{props.name}</h5>
                     <div className='d-flex justify-between align-center'>
                         <div className='d-flex flex-column'>
                             <span>Цена:</span>
-                            <b>{props.price} руб.</b>
+                            <b>{props.price} ₽</b>
                         </div>
                         <button className={ (addedInCart ) ? styles.buttonCardAdded : styles.buttonCard } onClick={() => onClickAddCard(props.id)} />
                     </div>

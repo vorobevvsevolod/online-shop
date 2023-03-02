@@ -15,10 +15,7 @@ const FullProductPage = () => {
         getProductByIDAxios(params.id).then(res=>{
             if(res === 'error'){
                 navigate('/error')
-            }else{
-                const product = card.find(item => item.id === res.id)
-                if(product) setProduct(product); else setProduct(res)
-            }
+            }else setProduct(res)
         })
     }, [])
 

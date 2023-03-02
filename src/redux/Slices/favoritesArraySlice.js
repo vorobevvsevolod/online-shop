@@ -9,10 +9,14 @@ export const fetchFavorites = createAsyncThunk('cart/fetchFavorites', async () =
         const responseProduct = await axios.get(`${URLServer}/product/${favorite.product_id}`);
         const product = responseProduct.data.result[0]
         const imageResponse = await axios.get(`${URLServer}/product/image/${favorite.product_id}`, { responseType: 'arraybuffer' });
-        const blob = new Blob([imageResponse.data], { type: imageResponse.headers['content-type'] });
-        product.image_url = URL.createObjectURL(blob);
-        favorite.product = product
-        delete favorite.product_id
+        try {
+            const blob = new Blob([imageResponse.data], { type: imageResponse.headers['content-type'] });
+            product.image_url = URL.createObjectURL(blob);
+            favorite.product = product
+            delete favorite.product_id
+        }catch (e){
+            console.error(e);
+        }
         return favorite
     })
     const updateFavorites = await Promise.all(promises)

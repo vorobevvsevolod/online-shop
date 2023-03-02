@@ -1,0 +1,15 @@
+.totalContainer{
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 20px 0 20px;
+  &_title{
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  &_value{
+    font-size: 22px;
+    font-weight: bold;
+
+  }
+}

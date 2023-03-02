@@ -1,13 +1,11 @@
 import {  createSlice } from '@reduxjs/toolkit';
 import axios from "axios";
 
-const initialState = {
-    token: ''
-}
-
 const TokenUserSlice = createSlice({
     name: 'TokenUser',
-    initialState,
+    initialState: {
+        token: '',
+    },
     reducers:{
         GetTokenByCookie: state => {
             const token = localStorage.getItem('token');

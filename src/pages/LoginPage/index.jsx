@@ -1,14 +1,16 @@
 import React from "react";
 import './loginRegister.scss'
 import {Link, useNavigate} from "react-router-dom";
-import {loginUserAxios} from "../Axios";
-import {SetTokenUser} from "../redux/Slices/TokenUserSlice";
-import {fetchCards, setCart, setFavorites, setFavoritesAndCart} from "../redux/Slices/CardArraySlice";
-import {fetchCart} from "../redux/Slices/CartArraySlice";
+import {loginUserAxios} from "../../Axios";
+import {SetTokenUser} from "../../redux/Slices/TokenUserSlice";
+import {setCart, setFavorites} from "../../redux/Slices/CardArraySlice";
+import {fetchCart} from "../../redux/Slices/CartArraySlice";
 import {useDispatch} from "react-redux";
-import {fetchFavorites} from "../redux/Slices/favoritesArraySlice";
+import {fetchFavorites} from "../../redux/Slices/favoritesArraySlice";
+import {fetchUserInfo} from "../../redux/Slices/userInfoSlice";
+import {fetchOrders} from "../../redux/Slices/OrdersSlice";
 
-function LoginRegisterPage () {
+function Index () {
     const [loginState, setLoginState] = React.useState({email: '', password: ''});
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -27,6 +29,8 @@ function LoginRegisterPage () {
                 dispatch(fetchFavorites()).then(responseFavorites =>{
                     dispatch(setFavorites(responseFavorites.payload))
                 })
+                dispatch(fetchUserInfo())
+                dispatch(fetchOrders())
 
                 navigate("/");
             } else alert("Что-то не так... Попробуйте еще раз")
@@ -42,8 +46,8 @@ function LoginRegisterPage () {
                     <div className="form-content">
                         <form>
                             <div className="form-group">
-                                <label htmlFor="username">Почта</label>
-                                <input type="text" id="username" name="username" required="required" onChange={(event) => setLoginState({...loginState, email: event.target.value})} />
+                                <label htmlFor="email">Почта</label>
+                                <input type="email" id="email" name="email" required="required" onChange={(event) => setLoginState({...loginState, email: event.target.value})} />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Пароль</label>
@@ -55,8 +59,8 @@ function LoginRegisterPage () {
                                 </Link>
 
                             </div>
-                            <div className="form-group" onClick={Autorization}>
-                                <button type="submit">Войти</button>
+                            <div className="form-group" >
+                                <button type="submit" onClick={Autorization}>Войти</button>
                             </div>
                         </form>
                     </div>
@@ -66,4 +70,4 @@ function LoginRegisterPage () {
     )
 }
 
-export default LoginRegisterPage;
+export default Index;

@@ -1,14 +1,26 @@
 .cartItem{
   align-items: center;
   position: relative;
-  border: 1px solid #F2F2F2;
+  border: 1px solid #e1e1e1;
   border-radius: 20px;
   overflow: hidden;
-  padding: 0px 10px 20px 10px;
+  padding: 0px 10px 15px 10px;
   margin-bottom: 16px;
+  .close{
+    position: absolute;
+    top: 12%;
+    right: 4%;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
 
+    &:hover{
+      transform: rotate(90deg);
+    }
+  }
   .container{
     display: flex;
+    border-bottom: 1px solid #dedede;
+    padding-bottom: 5px;
   }
 
   p{
@@ -19,4 +31,78 @@
     font-size: 14px;
 }
 
+  .priceTotal{
+    font-weight: bold;
+    font-size: 17px;
+    span{
+      color: #505050;
+      font-style: italic;
+      font-weight: normal;
+      margin-right: 10px;
+    }
+  }
+
+.orderTotalProducts{
+  margin-top: 10px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  &_price{
+    font-weight: bold;
+  }
+}
+
+  .artical{
+    margin: 0 0 4px 0;
+    font-weight: 500;
+    font-size: 14px;
+    span{
+      font-size: 15px;
+      font-weight: normal;
+      color: #949494;
+      margin: 0 8px 0 0;
+      font-style: italic;
+    }
+  }
+
+  .containerCounter{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    .price{
+      font-size: 17px;
+      position: relative;
+      top: 25px;
+      left: 7px;
+      line-height: 0;
+      margin: 0;
+    }
+  }
+}
+
+.order{
+
+  &_total{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_close{
+    position: absolute;
+    top: 10%;
+    right: 1.3%;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover{
+      transform: rotate(90deg);
+    }
+  }
+
+  &_counter{
+    position: absolute;
+    right: 3%;
+    top: 24%;
+  }
 }

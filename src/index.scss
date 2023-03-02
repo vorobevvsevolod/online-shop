@@ -31,8 +31,6 @@ header{
     margin: 0;
   }
 
-
-
   .header_center{
     font-size: 18px;
     font-weight: bold;
@@ -84,6 +82,25 @@ header{
         display: flex;
         span{
           margin-left: 5px;
+        }
+      }
+
+      .countProducts{
+        position: absolute;
+        top: -5px;
+        right: -4px;
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
+        background-color: #000000;
+        min-width: 22px;
+        min-height: 22px;
+        border-radius: 50%;
+        span{
+          position: absolute;
+          top: 45%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
       }
     }
@@ -198,6 +215,13 @@ header{
   }
 
 
+}
+
+.map{
+  border-radius: 15px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 

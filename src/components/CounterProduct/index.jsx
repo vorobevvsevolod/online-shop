@@ -23,7 +23,7 @@ const CounterProduct = (props) => {
 
     React.useEffect(()=>{
         setQuantity((cart.find(item => item.product.id === props.id))?.quantity)
-    },cart)
+    },[cart])
 
     const MinusQuantity = () =>{
         if(quantity !== 1)

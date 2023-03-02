@@ -339,10 +339,9 @@
         position: relative;
         display: flex;
         .counter{
-          position: absolute;
-          top: 34%;
-          left: 100%;
-          transform: translateY(-50%);
+          position: relative;
+          top: -10px;
+
 
         }
       }
