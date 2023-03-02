@@ -21,14 +21,15 @@ function addReviewsProductByIdDB(product_id, rating, text, author){
 }
 
 function getProductAVGRatingByIdDB(id){
-    return client.query('SELECT AVG(rating) FROM reviews WHERE product_id = $1', [id])
+    return client.query('SELECT AVG(rating), COUNT(*) FROM reviews WHERE product_id = $1', [id])
         .then(result => {
-            return result.rows[0].avg;
+            return result.rows[0];
         })
         .catch(err => {
             console.error(err);
         });
 }
+
 
 
 

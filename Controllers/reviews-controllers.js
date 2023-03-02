@@ -1,3 +1,4 @@
+const { getProductsDB, updateRatingProductDB } = require("../DataBase/productsDB")
 const { getReviewsProductByIdDB, addReviewsProductByIdDB, getProductAVGRatingByIdDB } = require("../DataBase/reviewsDB")
 
 
@@ -13,13 +14,17 @@ const getReviewsProductByID = (req, res) =>{
     }
 }
 
-const addReviewsProductByID = (req, res) =>{
+const addReviewsProductByID = async (req, res) =>{
     try{
-        addReviewsProductByIdDB(req.params.id, req.body.rating, req.body.text, req.body.author).then(response =>{
+        const product_id = req.params.id;
+
+        const rewies = await addReviewsProductByIdDB(product_id, req.body.rating, req.body.text, req.body.author);
+        const rating = await getProductAVGRatingByIdDB(product_id);
+        const updateRating = await updateRatingProductDB(product_id, Number(rating.avg).toFixed(2), Number(rating.count))  
             res.json({
-                response
+                result: rewies
             })
-        })
+       
     }catch (e){
         console.log(e)
         res.status(500).json('ошибка')
@@ -27,18 +32,14 @@ const addReviewsProductByID = (req, res) =>{
 }
 
 
-const getProductAVGRatingById = (req, res) =>{
-    try{
-        getProductAVGRatingByIdDB(req.params.id).then(response =>{
-            if(response){
-                res.json({ response })
-            } else res.json({response: 'нет оценок'})
-            
+/*
+getProductsDB(0).then(res =>{
+    res.map(product =>{
+        getProductAVGRatingByIdDB(product.id).then(responseRating =>{
+            updateRatingProductDB(product.id, Number(responseRating).toFixed(2))
         })
-    }catch (e){
-        res.status(500).json('ошибка')
-    }
-}
+    })
+})*/
 
 
 
@@ -46,5 +47,4 @@ const getProductAVGRatingById = (req, res) =>{
 module.exports = {
     getReviewsProductByID:getReviewsProductByID,
     addReviewsProductByID:addReviewsProductByID,
-    getProductAVGRatingById: getProductAVGRatingById
 }

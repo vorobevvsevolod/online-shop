@@ -19,7 +19,10 @@ function deleteProductInCartDB(ProductID, userId){
             if (result.rowCount === 0) return false
              else return true
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            console.error(err);
+            throw err; 
+        });
 }
 
 function updateQuantityCartDB (productId, userId, quantity){
@@ -31,9 +34,10 @@ function updateQuantityCartDB (productId, userId, quantity){
     .catch(err => console.error(err));
 }
 
+
 module.exports = {
     getCartDB: getCartDB,
     addProductInCartDB: addProductInCartDB,
     deleteProductInCartDB: deleteProductInCartDB,
-    updateQuantityCartDB:updateQuantityCartDB
+    updateQuantityCartDB: updateQuantityCartDB
 }

@@ -1,4 +1,4 @@
-const {getCartDB, addProductInCartDB, deleteProductInCartDB, updateQuantityCartDB} = require("../DataBase/cartDB");
+const {getCartDB, addProductInCartDB, deleteProductInCartDB, updateQuantityCartDB, deleteItemCartUserDB} = require("../DataBase/cartDB");
 
 
 const getCartUsers = (req, res) =>{
@@ -38,10 +38,36 @@ const updateQuantityCart = (req, res) =>{
     }catch (e){ res.status(500).json('ошибка');}
 }
 
+const deleteCartUser = (req, res) => {
+    try {
+      getCartDB(req.idUser)
+        .then((result) => {
+          const promises = result.map((cart) => {
+            return deleteProductInCartDB(cart.product_id, req.idUser);
+          });
+          Promise.all(promises)
+            .then((results) => {
+              let result = false;
+              results.map(res => result = res)
+              if(result) res.json({result}); else res.status(500).json('Ошибка');
+            })
+            .catch((err) => {
+              console.error(err);
+              res.status(500).json('Ошибка');
+            });
+        });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json('Ошибка');
+    }
+  };
+  
+
 
 module.exports ={
     getCartUsers:getCartUsers,
     addProductInCart: addProductInCart,
     deleteProductInCart: deleteProductInCart,
-    updateQuantityCart:updateQuantityCart 
+    updateQuantityCart:updateQuantityCart,
+    deleteCartUser:deleteCartUser 
 }

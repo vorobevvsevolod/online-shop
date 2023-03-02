@@ -3,10 +3,22 @@ const saveImage = require("../Utilities/saveImage");
 
 const getProducts = (req, res) =>{
     try{
-        getProductsDB(Number(req.query.offset)).then(result => {
-            res.json({
-                result: result
+        const {offset, sort, search} = req.query;
+        let sortMethod;
+        switch(sort){
+            case 'rating': sortMethod = 'rating DESC'; break;
+            case 'priceBy': sortMethod = 'price'; break;
+            case 'priceIn': sortMethod = 'price DESC'; break;
+            case 'reviews': sortMethod = 'count_reviews DESC'; break;
+        }
+        getProductsDB(Number(offset), sortMethod, search).then(result => {
+            getCountProductsDB(search).then(response =>{
+                res.json({
+                    result: result,
+                    total: response
+                })
             })
+            
         })
     }catch (e){
         res.status(500).json('ошибка')
@@ -61,8 +73,8 @@ const getImage = (req, res) =>{
 
 const getCountProducts = (req, res) =>{
     try {
-        
-        getCountProductsDB().then(result =>{
+        const { search } = req.query
+        getCountProductsDB(search).then(result =>{
             res.json({count: result})
         })
     } catch (e) {
@@ -70,6 +82,7 @@ const getCountProducts = (req, res) =>{
     }
 
 }
+
 
 module.exports ={
     getProducts: getProducts,

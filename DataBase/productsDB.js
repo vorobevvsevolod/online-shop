@@ -1,16 +1,27 @@
 const {client} = require('./connectToDB');
 const fs = require('fs');
 
-function getProductsDB(offset){
+function getProductsDB(offset, sort, search){
     const limit = 12;
-    return client.query('SELECT * FROM products ORDER BY id LIMIT $1 OFFSET $2', [limit, offset])
+    if(search)
+    return client.query(`SELECT * FROM products WHERE id::text ILIKE $1 OR name ILIKE $1 ORDER BY ${sort}, id ASC LIMIT $2 OFFSET $3`, [`%${search}%`, limit, offset])
         .then(result => {
             return result.rows;
         })
         .catch(err => {
             console.error(err);
         });
+
+    return client.query(`SELECT * FROM products ORDER BY ${sort}, id ASC LIMIT $1 OFFSET $2`, [limit, offset])
+        .then(result => {
+            return result.rows;
+        })
+        .catch(err => {
+            console.error(err);
+        });
+
 }
+
 
 function getProductsByIdDB(id){
     return client.query('SELECT * FROM products WHERE id = $1', [id])
@@ -61,7 +72,15 @@ function getImageDB(id, res) {
         });
 }
 
-function getCountProductsDB  () {
+function getCountProductsDB  (value) {
+    if(value)
+        return client.query('SELECT COUNT(*) FROM products WHERE id::text ILIKE $1 OR name ILIKE $1',[`%${value}%`])
+            .then(res => { 
+                return res.rows[0].count 
+            })
+            .catch(err => {
+                console.error(err);
+            });
     return client.query('SELECT COUNT(*) FROM products')
         .then(res => { 
             return res.rows[0].count 
@@ -71,12 +90,35 @@ function getCountProductsDB  () {
         });
 }
 
+function updateQuntityProductsDB  (id, value) {
+    return client.query('UPDATE products set count = count - $1 WHERE id = $2', [value, id])
+    .then(res => { return res.rowCount > 0})
+    .catch(err => {
+        console.error(err);
+    });
+}
+
+
+function updateRatingProductDB (id, rating, count_reviews) {
+    return client.query('UPDATE products SET rating = $1, count_reviews = $2 WHERE id = $3', [rating, count_reviews, id])
+    .then(result => {
+        if (result.rowCount === 0)
+            throw new Error(`Продукт не найден`);
+        return result.rowCount > 0;
+    })
+    .catch(err => {
+        console.error(err);
+    });
+}
+
 module.exports = {
     getProductsDB: getProductsDB,
     getProductsByIdDB: getProductsByIdDB,
     addProductsDB: addProductsDB,
     getImageDB: getImageDB,
     updateProductImageURL:updateProductImageURL,
-    getCountProductsDB:getCountProductsDB
+    getCountProductsDB:getCountProductsDB,
+    updateQuntityProductsDB:updateQuntityProductsDB,
+    updateRatingProductDB:updateRatingProductDB
 }
 

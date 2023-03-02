@@ -1,4 +1,4 @@
-const { LoginDB, RegistrationDB,  GetInfoUserDB } = require("../DataBase/usersDB");
+const { LoginDB, RegistrationDB,  GetInfoUserDB, changeEmailUserDB, changeUsernameUserDB, changePhoneUserDB } = require("../DataBase/usersDB");
 const hashPassword = require('../Utilities/hashPassword')
 const jwt = require('jsonwebtoken');
 const SECRET_PASSWORD = require('../server')
@@ -40,23 +40,62 @@ const Login = (req, res) =>{
 }
 const GetInfoUser = (req, res) =>{
     try{
-        const decoded =  jwt.verify(req.token, SECRET_PASSWORD);
-        GetInfoUserDB(decoded.email).then(result => {
+        GetInfoUserDB(req.idUser).then(result => {
             if(result){
+                const {email, username, phone} = result;
                 res.json({
-                    success: true,
-                    username: result
+                    email: email,
+                    username: username,
+                    phone: phone
                 })
             }else res.status(403).json('пользователь не найден')
 
       });
     }catch (error){
-        res.status(403).json('нет доступа');
+        res.status(403).json('ошибка');
+    }
+}
+
+const changeEmailUser = (req, res) =>{
+    try{
+        changeEmailUserDB(req.idUser, req.body.email).then(result =>{
+            res.json({
+                result
+            })
+        })
+    }catch (error){
+        res.status(403).json('ошибка');
+    }
+}
+const changeUsernameUser = (req, res) =>{
+    try{
+        changeUsernameUserDB(req.idUser, req.body.username).then(result =>{
+            res.json({
+                result
+            })
+        })
+    }catch (error){
+        res.status(403).json('ошибка');
+    }
+}
+
+const changePhoneUser = (req, res) =>{
+    try{
+        changePhoneUserDB(req.idUser, req.body.phone).then(result =>{
+            res.json({
+                result
+            })
+        })
+    }catch (error){
+        res.status(403).json('ошибка');
     }
 }
 
 module.exports = {
     Registration,
     Login,
-    GetInfoUser
+    GetInfoUser,
+    changeEmailUser,
+    changeUsernameUser,
+    changePhoneUser
 }

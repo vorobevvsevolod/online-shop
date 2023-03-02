@@ -1,12 +1,15 @@
 const {
     Registration,
     Login,
-    GetInfoUser
+    GetInfoUser,
+    changeEmailUser,
+    changeUsernameUser,
+    changePhoneUser
 } = require('../Controllers/users-controllers');
 
 const express = require('express');
 const { validationResult } = require('express-validator')
-const {registrationValidator, LoginValidator} = require('../Validate/userValidator')
+const {registrationValidator, LoginValidator, AutorizationValidator} = require('../Validate/userValidator')
 const router = express.Router();
 
 router.post('/registration', registrationValidator, (req, res, next)=>{
@@ -24,11 +27,53 @@ router.post('/auth', LoginValidator, (req,res, next)=>{
 router.post('/auth', Login);
 
 router.get('/auth/me', (req, res, next)=>{
-    const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
-    if(!token) return res.status(403).json('нет доступа');
-    req.token = token;
-    next();
+    if(req.headers.authorization) {
+        AutorizationValidator(req.headers.authorization).then(result =>{
+            if(result.flag)
+                req.idUser = result.id;
+            else return res.status(400).json( 'Ошибка авторизации');
+            next();
+        })
+    } else return res.status(400).json( 'Ошибка авторизации');
 });
+
 router.get('/auth/me', GetInfoUser)
+
+router.post('/auth/email', (req, res, next)=>{
+    if(req.headers.authorization) {
+        AutorizationValidator(req.headers.authorization).then(result =>{
+            if(result.flag)
+                req.idUser = result.id;
+            else return res.status(400).json( 'Ошибка авторизации');
+            next();
+        })
+    } else return res.status(400).json( 'Ошибка авторизации');
+});
+router.post('/auth/email', changeEmailUser);
+
+router.post('/auth/username', (req, res, next)=>{
+    if(req.headers.authorization) {
+        AutorizationValidator(req.headers.authorization).then(result =>{
+            if(result.flag)
+                req.idUser = result.id;
+            else return res.status(400).json( 'Ошибка авторизации');
+            next();
+        })
+    } else return res.status(400).json( 'Ошибка авторизации');
+});
+router.post('/auth/username', changeUsernameUser);
+
+router.post('/auth/phone', (req, res, next)=>{
+    if(req.headers.authorization) {
+        AutorizationValidator(req.headers.authorization).then(result =>{
+            if(result.flag)
+                req.idUser = result.id;
+            else return res.status(400).json( 'Ошибка авторизации');
+            next();
+        })
+    } else return res.status(400).json( 'Ошибка авторизации');
+});
+router.post('/auth/phone', changePhoneUser);
+
 
 module.exports = router;

@@ -21,10 +21,10 @@ function RegistrationDB (username, email, password) {
         });
 }
 
-function GetInfoUserDB(email) {
-    return client.query('SELECT * FROM users WHERE email = $1', [email])
+function GetInfoUserDB(id) {
+    return client.query('SELECT * FROM users WHERE id = $1', [id])
         .then(result => {
-            return result.rows;
+            return result.rows[0];
         })
         .catch(err => {
             return err;
@@ -37,9 +37,46 @@ function searchUserByIdDB (id){
         .catch(err => {  console.error(err); });
 }
 
+function changeEmailUserDB (id, email){
+    return client.query('UPDATE users SET email = $1 WHERE id = $2', [email, id])
+        .then(result => {
+            if (result.rowCount === 0)
+                throw new Error(`Пользователь не найден`);
+            return result.rowCount > 0;
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+function changeUsernameUserDB (id, username){
+    return client.query('UPDATE users SET username = $1 WHERE id = $2', [username, id])
+        .then(result => {
+            if (result.rowCount === 0)
+                throw new Error(`Пользователь не найден`);
+            return result.rowCount > 0;
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+function changePhoneUserDB (id, phone){
+    return client.query('UPDATE users SET phone = $1 WHERE id = $2', [phone, id])
+        .then(result => {
+            if (result.rowCount === 0)
+                throw new Error(`Пользователь не найден`);
+            return result.rowCount > 0;
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+
 module.exports = {
     LoginDB: LoginDB,
     RegistrationDB: RegistrationDB,
     GetInfoUserDB: GetInfoUserDB,
-    searchUserByIdDB:searchUserByIdDB
+    searchUserByIdDB:searchUserByIdDB,
+    changeEmailUserDB: changeEmailUserDB,
+    changeUsernameUserDB:changeUsernameUserDB,
+    changePhoneUserDB:changePhoneUserDB
 };
