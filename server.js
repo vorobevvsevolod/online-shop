@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const connectNgrok = require('./Utilities/createTunnel');
 const cors = require('cors');
+const { createDBTable } = require('./DataBase/DBcreateRenderTable');
 const PORT = 3500;
 const NGROK_TOKEN = "2LgbtduapYvw0fuls9NFO0afieX_6YkSayfWxYjQo9rJSGT1C";
 module.exports = SECRET_PASSWORD = "vsevolod1234";
@@ -30,5 +31,7 @@ app.use(require('./Routes/cart-routers'));
 app.use(require('./Routes/favorites-routers'));
 app.use(require('./Routes/reviews-routers'));
 app.use(require('./Routes/orders-routers'));
+
+createDBTable().then(res => console.log(res))
 
 
