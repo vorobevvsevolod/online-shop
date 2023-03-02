@@ -1,7 +1,7 @@
 const {client} = require('./connectToDB')
 
 const sql = `
-CREATE TABLE IF NOT EXISTS public.cart
+CREATE TABLE IF NOT EXISTS cart
 (
   id serial NOT NULL PRIMARY KEY,
   user_id integer NOT NULL,
@@ -9,21 +9,21 @@ CREATE TABLE IF NOT EXISTS public.cart
   quantity integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.favorites
+CREATE TABLE IF NOT EXISTS favorites
 (
   id serial NOT NULL PRIMARY KEY,
   user_id integer NOT NULL,
   product_id integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.order_products
+CREATE TABLE IF NOT EXISTS order_products
 (
-  order_id integer NOT NULL REFERENCES public.orders(order_id) ON DELETE CASCADE,
-  product_id integer NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
+  order_id integer NOT NULL REFERENCES orders(order_id) ON DELETE CASCADE,
+  product_id integer NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   quantity integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.orders
+CREATE TABLE IF NOT EXISTS orders
 (
   order_id serial NOT NULL PRIMARY KEY,
   user_id bigint NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.orders
   adress text NOT NULL DEFAULT ''
 );
 
-CREATE TABLE IF NOT EXISTS public.products
+CREATE TABLE IF NOT EXISTS products
 (
   id serial NOT NULL PRIMARY KEY,
   name text NOT NULL,
@@ -45,17 +45,17 @@ CREATE TABLE IF NOT EXISTS public.products
   count_reviews integer
 );
 
-CREATE TABLE IF NOT EXISTS public.reviews
+CREATE TABLE IF NOT EXISTS reviews
 (
   id serial NOT NULL PRIMARY KEY,
-  product_id integer REFERENCES public.products(id) ON DELETE CASCADE,
+  product_id integer REFERENCES products(id) ON DELETE CASCADE,
   rating integer,
   text text,
   "time" timestamp without time zone,
   author character varying(255)
 );
 
-CREATE TABLE IF NOT EXISTS public.users
+CREATE TABLE IF NOT EXISTS users
 (
   username text NOT NULL,
   email text NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS public.users
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS unique_email
-  ON public.users (email);
+  ON users (email);
 `
 function createDBTable (){
     return client.query(sql)
