@@ -15,14 +15,6 @@ CREATE TABLE IF NOT EXISTS favorites
   user_id integer NOT NULL,
   product_id integer NOT NULL
 );
-
-CREATE TABLE IF NOT EXISTS order_products
-(
-  order_id integer NOT NULL REFERENCES orders(order_id) ON DELETE CASCADE,
-  product_id integer NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  quantity integer NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS orders
 (
   order_id serial NOT NULL PRIMARY KEY,
@@ -32,6 +24,14 @@ CREATE TABLE IF NOT EXISTS orders
   date text NOT NULL,
   adress text NOT NULL DEFAULT ''
 );
+
+CREATE TABLE IF NOT EXISTS order_products
+(
+  order_id integer NOT NULL REFERENCES orders(order_id) ON DELETE CASCADE,
+  product_id integer NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  quantity integer NOT NULL
+);
+
 
 CREATE TABLE IF NOT EXISTS products
 (
