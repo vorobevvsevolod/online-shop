@@ -71,7 +71,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS unique_email
 function createDBTable (){
     return client.query(sql)
     .then(res => {return true})
-    .catch(e => {return false})
+    .catch(e => {return console.log(e)})
 }
 
 
