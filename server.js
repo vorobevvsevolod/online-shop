@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const connectNgrok = require('./Utilities/createTunnel');
 const cors = require('cors');
-const { createDBTable } = require('./DataBase/DBcreateRenderTable');
+const path = require('path');
 const PORT = 3500;
 const NGROK_TOKEN = "2LgbtduapYvw0fuls9NFO0afieX_6YkSayfWxYjQo9rJSGT1C";
 module.exports = SECRET_PASSWORD = "vsevolod1234";
@@ -23,6 +23,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
     next();
 });
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json())
 app.use(require('./Routes/users-routers'));
@@ -31,7 +32,7 @@ app.use(require('./Routes/cart-routers'));
 app.use(require('./Routes/favorites-routers'));
 app.use(require('./Routes/reviews-routers'));
 app.use(require('./Routes/orders-routers'));
-
-createDBTable().then(res => console.log(res))
-
+app.get('/', (req, res)=>{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
