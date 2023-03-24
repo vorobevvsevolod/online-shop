@@ -32,18 +32,6 @@ const addReviewsProductByID = async (req, res) =>{
 }
 
 
-/*
-getProductsDB(0).then(res =>{
-    res.map(product =>{
-        getProductAVGRatingByIdDB(product.id).then(responseRating =>{
-            updateRatingProductDB(product.id, Number(responseRating).toFixed(2))
-        })
-    })
-})*/
-
-
-
-
 module.exports = {
     getReviewsProductByID:getReviewsProductByID,
     addReviewsProductByID:addReviewsProductByID,

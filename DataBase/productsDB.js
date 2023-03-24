@@ -34,7 +34,8 @@ function getProductsByIdDB(id){
 }
 
 function addProductsDB(product){
-    return client.query('INSERT INTO products (name, price, count, description, image_url) VALUES ($1, $2, $3, $4, $5) RETURNING id', [product.name, product.price, product.count, product.description, '/img.jpg'])
+    return client.query('INSERT INTO products (name, price, count, description, image_url) VALUES ($1, $2, $3, $4, $5) RETURNING id', 
+    [product.name, product.price, product.count, product.description, '/img.jpg'])
         .then(result => {
             return result.rows[0].id;
         })
